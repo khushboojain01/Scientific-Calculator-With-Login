@@ -1,10 +1,13 @@
-package login_system_calc;
-import login_system_calc.myscicalc.scicalc;
+//package login_system_calc;
+//import login_system_calc.myscicalc.scicalc;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.Color;
+import java.sql.*;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -14,6 +17,9 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
+
+import org.w3c.dom.UserDataHandler;
+
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -99,7 +105,7 @@ public class loginsystemcalc {
 		frame.getContentPane().add(usertextfield);
 		usertextfield.setColumns(10);
 		
-		pwdtextfield = new JTextField();
+		pwdtextfield = new JPasswordField();
 		pwdtextfield.setBounds(121, 137, 228, 29);
 		pwdtextfield.setFont(new Font("Segoe UI Historic", Font.PLAIN, 13));
 		pwdtextfield.setColumns(10);
@@ -120,18 +126,18 @@ public class loginsystemcalc {
 				
 			}
 		});
+		
 		btnreset.setFont(new Font("Segoe UI Historic", Font.BOLD, 15));
 		btnreset.setBounds(256, 190, 115, 36);
 		frame.getContentPane().add(btnreset);
 		
-		JButton btnlogin = new JButton("Login");
+		JButton btnlogin = new JButton("Sign In");
 		btnlogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				String password = pwdtextfield.getText();
 				String Username = usertextfield.getText();
-				
-				if (password.contains("1234") && Username.contains("apsit01")) {
+				/*if (password.contains("1234") && Username.contains("apsit01")) {
 					pwdtextfield.setText(null);
 					usertextfield.setText(null);
                     scicalc info = new scicalc();
@@ -142,14 +148,72 @@ public class loginsystemcalc {
 					JOptionPane.showMessageDialog(null, "Invalid Login","Try Again!",JOptionPane.ERROR_MESSAGE);
 					pwdtextfield.setText(null);
 					usertextfield.setText(null);
-				}
-			}
+				}	*/
+				try {
+					//Class.forName("com.mysql.jdbc.Driver");
+				//	Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3307/loginmyscicalc","root","");
+					Statement stmnt = con.createStatement();
+					//String sql= "insert into loginmp (uname, pswd) values('"+Username+"','"+password+"')";
+					//stmnt.executeUpdate(sql);
+					String sql2 ="Select * from loginmp";
+					ResultSet rs = stmnt.executeQuery(sql2);
+					//System.out.println(sql2);
+					while(rs.next()) 
+					{ 
+						Username=rs.getString("uname");
+						password=rs.getString("pswd");
+						System.out.println("Name :" + Username + "  and Password  :" + password);
+						if(password.contains(pwdtextfield.getText()) && Username.contains(usertextfield.getText())){
+							pwdtextfield.setText(null);
+						usertextfield.setText(null);
+						scicalc info = new scicalc();
+						scicalc.main(null);
+						}
+					}
+					//String un=sql2.split(sql2)
+					/*if (password.contains("1234") && Username.contains("apsit01")) {
+						pwdtextfield.setText(null);
+						usertextfield.setText(null);
+						scicalc info = new scicalc();
+						scicalc.main(null);
+					}
+					else 
+					{ 
+						JOptionPane.showMessageDialog(null, "Invalid Login","Try Again!",JOptionPane.ERROR_MESSAGE);
+						pwdtextfield.setText(null);
+						usertextfield.setText(null);
+					}*/
+					if (rs.next()){
+						
+					JOptionPane.showMessageDialog(null,"Login Successful!");
+				    scicalc info = new scicalc();
+                    scicalc.main(null);
+
+					}
 				
-		});
+				else{
+				/*JOptionPane.showMessageDialog(null,"Login Failed!");
+				 con.close();*/
+				 /*System.out.println("Login Failed");*/
+				 
+				}
+
+				} catch(Exception ae){
+					System.out.println(ae);
+				}	
+			}	
+
+			}	);
+		
+		
+	
 		btnlogin.setFont(new Font("Segoe UI Historic", Font.BOLD, 15));
 		btnlogin.setBounds(89, 190, 115, 36);
 		frame.getContentPane().add(btnlogin);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-}
+
+	}
+
