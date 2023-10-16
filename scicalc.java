@@ -816,6 +816,7 @@ public class scicalc {
 		});
 		btnconvertclear.setBounds(732, 199, 99, 24);
 		frame.getContentPane().add(btnconvertclear);
+		frame.getContentPane().add(btnconvertclear);
 		
 	}
 }
